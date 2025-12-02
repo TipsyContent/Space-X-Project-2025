@@ -1,20 +1,26 @@
 import Foundation
 
-struct Launch: Codable, Identifiable {
+struct Launch: Codable, Identifiable, Hashable {
     let id: String
     let name: String
     let date_utc: String
     let success: Bool?
     let rocket: String
     let links: Links?
+    let crew: [LaunchCrew]?
 
-    struct Links: Codable {
+    struct Links: Codable, Hashable {
         let patch: Patch?
 
-        struct Patch: Codable {
+        struct Patch: Codable, Hashable {
             let small: String?
             let large: String?
         }
+    }
+
+    struct LaunchCrew: Codable, Hashable {
+        let crew: String // ID of the crew member
+        let role: String
     }
 
     var dateFormatted: String {
@@ -26,6 +32,14 @@ struct Launch: Codable, Identifiable {
             return displayFormatter.string(from: date)
         }
         return date_utc
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: Launch, rhs: Launch) -> Bool {
+        lhs.id == rhs.id
     }
 }
 

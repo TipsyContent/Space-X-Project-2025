@@ -4,35 +4,42 @@
 //
 //  Created by Tipsy on 02/12/2025.
 //
-
-import SwiftUI
-
 import SwiftUI
 
 struct LaunchListView: View {
     @EnvironmentObject var vm: LaunchListViewModel
+    @State private var navigationPath = NavigationPath()
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             List {
                 ForEach(vm.launches) { launch in
-                    LaunchRow(launch: launch)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)) // full width
-                        .listRowSeparator(.visible)
-                        .listRowBackground(Color(hex: "045788")) // same background as row
+                    Button {
+                        navigationPath.append(launch)
+                    } label: {
+                        LaunchRow(launch: launch)
+                    }
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .listRowSeparator(.visible)
+                    .listRowBackground(Color(hex: "045788"))
                 }
             }
-            .scrollContentBackground(.hidden) // remove default gray/black list background
-            .background(Color(hex: "023E61")) // your app background color
+            .scrollContentBackground(.hidden)
+            .background(Color(hex: "023E61"))
             .navigationTitle("SpaceX Launches")
             .navigationBarTitleDisplayMode(.large)
             .onAppear {
-                vm.fetchLaunches()
+                if vm.launches.isEmpty {
+                    vm.launches = PreviewData.launches // placeholder data for instant preview
+                }
+                vm.fetchLaunches() // fetch API data
+            }
+            .navigationDestination(for: Launch.self) { launch in
+                LaunchDetailView(launch: launch)
             }
         }
     }
 }
-
 
 struct LaunchListView_Previews: PreviewProvider {
     static var previews: some View {
@@ -40,10 +47,9 @@ struct LaunchListView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
             .environmentObject({
                 let vm = LaunchListViewModel()
-                vm.launches = PreviewData.launches // placeholder data
+                vm.launches = PreviewData.launches
                 return vm
             }())
             .previewDevice("iPhone 14 Pro")
     }
 }
-

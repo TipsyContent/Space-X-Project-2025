@@ -19,10 +19,23 @@ final class LaunchService {
         APIService.shared.fetchData(from: baseURL, type: [Launch].self) { result in
             switch result {
             case .success(let launches):
-                // Optional: only take first 20 for testing
-                completion(.success(Array(launches.prefix(20))))
+                DispatchQueue.main.async {
+                    // Filter launches that have crew
+                    let filtered = launches
+                        .filter { launch in
+                            if let crew = launch.crew {
+                                return !crew.isEmpty
+                            }
+                            return false
+                        }
+                        .sorted { $0.date_utc > $1.date_utc }
+
+                    completion(.success(filtered))
+                }
             case .failure(let error):
-                completion(.failure(error))
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
             }
         }
     }

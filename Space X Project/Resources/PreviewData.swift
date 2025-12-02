@@ -12,7 +12,8 @@ struct PreviewData {
                 small: "https://images2.imgbox.com/3c/0e/T8iJcSN3_o.png",
                 large: nil
             )
-        )
+        ),
+        crew: [] // no crew
     )
     
     static let launch2 = Launch(
@@ -26,7 +27,11 @@ struct PreviewData {
                 small: "https://images2.imgbox.com/40/e3/GypSkayF_o.png",
                 large: nil
             )
-        )
+        ),
+        crew: [
+            Launch.LaunchCrew(crew: "crew-id-1", role: "Commander"),
+            Launch.LaunchCrew(crew: "crew-id-2", role: "Pilot")
+        ]
     )
 
     static let launches: [Launch] = [launch, launch2]
