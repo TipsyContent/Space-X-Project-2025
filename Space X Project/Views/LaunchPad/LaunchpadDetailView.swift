@@ -1,10 +1,3 @@
-//
-//  LaunchpadDetailView.swift
-//  Space X Project
-//
-//  Created by Tipsy on 03/12/2025.
-//
-/*
 import SwiftUI
 import MapKit
 
@@ -16,33 +9,31 @@ struct LaunchpadDetailView: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color(hex: "023E61").edgesIgnoringSafeArea(.all)
-                
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        // Header
-                        headerSection
-                        
-                        Divider().background(Color.white.opacity(0.3))
-                        
-                        // Launchpad Info
-                        infoSection
-                        
-                        Divider().background(Color.white.opacity(0.3))
-                        
-                        // Launches from this pad
-                        launchesSection
-                    }
-                    .padding()
+        ZStack {
+            Color(hex: "023E61").edgesIgnoringSafeArea(.all)
+            
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    // Header
+                    headerSection
+                    
+                    Divider().background(Color.white.opacity(0.3))
+                    
+                    // Launchpad Info
+                    infoSection
+                    
+                    Divider().background(Color.white.opacity(0.3))
+                    
+                    // Launches from this pad
+                    launchesSection
                 }
+                .padding()
             }
-            .navigationTitle(launchpad.name)
-            .navigationBarTitleDisplayMode(.inline)
-            .task {
-                await loadLaunches()
-            }
+        }
+        .navigationTitle(launchpad.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .task {
+            await loadLaunches()
         }
     }
     
@@ -167,9 +158,6 @@ struct LaunchpadDetailView: View {
         .padding()
         .background(Color(hex: "034B7A").opacity(0.6))
         .cornerRadius(8)
-        .navigationDestination(for: Launch.self) { launch in
-            LaunchDetailView(launch: launch)
-        }
     }
     
     private func infoRow(label: String, value: String) -> some View {
@@ -218,4 +206,3 @@ struct LaunchpadDetailView: View {
     LaunchpadDetailView(launchpad: PreviewData.launchpads[0])
         .preferredColorScheme(.dark)
 }
-*/

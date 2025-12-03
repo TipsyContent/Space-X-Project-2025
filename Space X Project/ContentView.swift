@@ -5,10 +5,10 @@ struct ContentView: View {
         TabView {
             LaunchesTabView()
                 .tabItem {
-                    Label("Launches", systemImage: "rocketship.fill")
+                    Label("Launches", systemImage: "paperplane.fill")
                 }
             
-            //LaunchPadMapView()
+            LaunchPadMapView()
                 .tabItem {
                     Label("Launch Pads", systemImage: "map.fill")
                 }
@@ -36,7 +36,7 @@ struct ContentView: View {
             )
         }
         .tabItem {
-            Label("Launches", systemImage: "rocket.fill")
+            Label("Launches", systemImage: "paperplane.fill")
         }
 
         VStack(spacing: 20) {
