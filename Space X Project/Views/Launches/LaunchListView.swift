@@ -37,6 +37,9 @@ struct LaunchListView: View {
                 .listStyle(.plain)
             }
         }
+        .task {
+            await viewModel.fetchLaunches()
+        }
     }
 }
 
