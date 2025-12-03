@@ -1,10 +1,3 @@
-//
-//  LaunchDetailView 2.swift
-//  Space X Project
-//
-//  Created by Tipsy on 02/12/2025.
-//
-
 import SwiftUI
 
 struct LaunchDetailView: View {
@@ -16,30 +9,28 @@ struct LaunchDetailView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color(hex: "023E61").edgesIgnoringSafeArea(.all)
-                
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        headerView
-                        divider
-                        saveButton
-                        detailsSection
-                        flightInfoSection
-                        rocketSection
-                        crewSection
-                        launchpadSection
-                        mediaSection
-                    }
-                    .padding()
+        ZStack {
+            Color(hex: "023E61").edgesIgnoringSafeArea(.all)
+            
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    headerView
+                    divider
+                    saveButton
+                    detailsSection
+                    flightInfoSection
+                    rocketSection
+                    crewSection
+                    launchpadSection
+                    mediaSection
                 }
+                .padding()
             }
-            .navigationTitle("Launch Details")
-            .navigationBarTitleDisplayMode(.inline)
-            .task {
-                await viewModel.loadDetails()
-            }
+        }
+        .navigationTitle("Launch Details")
+        .navigationBarTitleDisplayMode(.inline)
+        .task {
+            await viewModel.loadDetails()
         }
     }
     
