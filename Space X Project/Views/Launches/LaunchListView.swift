@@ -1,9 +1,3 @@
-//
-//  LaunchListView 2.swift
-//  Space X Project
-//
-//  Created by Tipsy on 02/12/2025.
-//
 import SwiftUI
 
 struct LaunchListView: View {
@@ -11,34 +5,40 @@ struct LaunchListView: View {
     @Binding var navigationPath: NavigationPath
     
     var body: some View {
-        ZStack {
-            Color(hex: "023E61").edgesIgnoringSafeArea(.all)
-            
-            if viewModel.isLoading && viewModel.launches.isEmpty {
-                ProgressView()
-                    .tint(.blue)
-            } else if let error = viewModel.errorMessage {
-                ErrorView(error: error)
-            } else if viewModel.launches.isEmpty {
-                Text("No launches available")
-                    .foregroundColor(.white)
-            } else {
-                List {
-                    ForEach(viewModel.launches) { launch in
-                        NavigationLink(value: launch) {
-                            LaunchRow(launch: launch)
+        NavigationStack(path: $navigationPath) {
+            ZStack {
+                Color(hex: "023E61").edgesIgnoringSafeArea(.all)
+                
+                if viewModel.isLoading && viewModel.launches.isEmpty {
+                    ProgressView()
+                        .tint(.blue)
+                } else if let error = viewModel.errorMessage {
+                    ErrorView(error: error)
+                } else if viewModel.launches.isEmpty {
+                    Text("No launches available")
+                        .foregroundColor(.white)
+                } else {
+                    List {
+                        ForEach(viewModel.launches) { launch in
+                            NavigationLink(value: launch) {
+                                LaunchRow(launch: launch)
+                            }
+                            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .listRowSeparator(.visible)
+                            .listRowBackground(Color(hex: "045788"))
                         }
-                        .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        .listRowSeparator(.visible)
-                        .listRowBackground(Color(hex: "045788"))
                     }
+                    .scrollContentBackground(.hidden)
+                    .listStyle(.plain)
                 }
-                .scrollContentBackground(.hidden)
-                .listStyle(.plain)
             }
-        }
-        .task {
-            await viewModel.fetchLaunches()
+            .navigationTitle("SpaceX Launches")
+            .navigationDestination(for: Launch.self) { launch in
+                LaunchDetailView(launch: launch)
+            }
+            .task {
+                await viewModel.fetchLaunches()
+            }
         }
     }
 }
@@ -64,7 +64,6 @@ struct ErrorView: View {
 }
 
 #Preview {
-    // Create a view model and inject preview launches
     let vm = LaunchListViewModel()
     vm.launches = PreviewData.launches
     
