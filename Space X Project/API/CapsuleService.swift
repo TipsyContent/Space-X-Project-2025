@@ -5,6 +5,7 @@
 //  Created by Tipsy on 02/12/2025.
 //
 import Foundation
+
 final class CapsuleService {
     static let shared = CapsuleService()
     private init() {}

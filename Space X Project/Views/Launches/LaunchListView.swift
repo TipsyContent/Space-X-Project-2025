@@ -1,5 +1,5 @@
 //
-//  LaunchListView.swift
+//  LaunchListView 2.swift
 //  Space X Project
 //
 //  Created by Tipsy on 02/12/2025.
@@ -7,49 +7,68 @@
 import SwiftUI
 
 struct LaunchListView: View {
-    @EnvironmentObject var vm: LaunchListViewModel
-    @State private var navigationPath = NavigationPath()
-
+    @ObservedObject var viewModel: LaunchListViewModel
+    @Binding var navigationPath: NavigationPath
+    
     var body: some View {
-        NavigationStack(path: $navigationPath) {
-            List {
-                ForEach(vm.launches) { launch in
-                    Button {
-                        navigationPath.append(launch)
-                    } label: {
-                        LaunchRow(launch: launch)
+        ZStack {
+            Color(hex: "023E61").edgesIgnoringSafeArea(.all)
+            
+            if viewModel.isLoading && viewModel.launches.isEmpty {
+                ProgressView()
+                    .tint(.blue)
+            } else if let error = viewModel.errorMessage {
+                ErrorView(error: error)
+            } else if viewModel.launches.isEmpty {
+                Text("No launches available")
+                    .foregroundColor(.white)
+            } else {
+                List {
+                    ForEach(viewModel.launches) { launch in
+                        NavigationLink(value: launch) {
+                            LaunchRow(launch: launch)
+                        }
+                        .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                        .listRowSeparator(.visible)
+                        .listRowBackground(Color(hex: "045788"))
                     }
-                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    .listRowSeparator(.visible)
-                    .listRowBackground(Color(hex: "045788"))
                 }
-            }
-            .scrollContentBackground(.hidden)
-            .background(Color(hex: "023E61"))
-            .navigationTitle("SpaceX Launches")
-            .navigationBarTitleDisplayMode(.large)
-            .onAppear {
-                if vm.launches.isEmpty {
-                    vm.launches = PreviewData.launches // placeholder data for instant preview
-                }
-                vm.fetchLaunches() // fetch API data
-            }
-            .navigationDestination(for: Launch.self) { launch in
-                LaunchDetailView(launch: launch)
+                .scrollContentBackground(.hidden)
+                .listStyle(.plain)
             }
         }
     }
 }
 
-struct LaunchListView_Previews: PreviewProvider {
-    static var previews: some View {
-        LaunchListView()
-            .preferredColorScheme(.dark)
-            .environmentObject({
-                let vm = LaunchListViewModel()
-                vm.launches = PreviewData.launches
-                return vm
-            }())
-            .previewDevice("iPhone 14 Pro")
+struct ErrorView: View {
+    let error: String
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle")
+                .font(.system(size: 40))
+                .foregroundColor(.red)
+            Text("Error loading launches")
+                .font(.headline)
+                .foregroundColor(.white)
+            Text(error)
+                .font(.caption)
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
+        }
+        .padding()
     }
+}
+
+#Preview {
+    let vm = LaunchListViewModel()
+    vm.launches = PreviewData.launches
+    
+    return NavigationStack {
+        LaunchListView(
+            viewModel: vm,
+            navigationPath: .constant(NavigationPath())
+        )
+    }
+    .preferredColorScheme(.dark)
 }

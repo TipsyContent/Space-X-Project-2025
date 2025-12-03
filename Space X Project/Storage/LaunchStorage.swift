@@ -12,6 +12,13 @@ final class LaunchStorage {
     
     private let key = "savedLaunchIDs"
     
+    /// Saves a launch ID locally using UserDefaults
+    /// Valgt løsning: UserDefaults fordi:
+    /// - Simpel og effektiv for små datamængder (kun launch IDs)
+    /// - Hurtig adgang uden database overhead
+    /// - Indbygget i iOS, ingen externe dependencies
+    /// - Automatisk synkronisering med iCloud
+    /// - Perfekt til denne use case
     func saveLaunchID(_ id: String) {
         var saved = getSavedLaunchIDs()
         if !saved.contains(id) {

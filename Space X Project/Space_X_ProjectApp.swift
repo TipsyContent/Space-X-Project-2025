@@ -6,32 +6,17 @@
 //
 
 import SwiftUI
-// import Firebase if needed
+// import Firebase TODO
 
 @main
 struct Space_X_ProjectApp: App {
-    
-    // Shared ViewModels
-    @StateObject var launchListVM = LaunchListViewModel()
-    
     init() {
-        // Firebase setup if used
-        // FirebaseApp.configure()
+        // FirebaseApp.configure() TODO
     }
     
     var body: some Scene {
         WindowGroup {
-            LaunchListView()
-                .preferredColorScheme(.dark)
-                .environmentObject(launchListVM)
-                .onAppear {
-                    // Use placeholder launches for instant preview
-                    if launchListVM.launches.isEmpty {
-                        launchListVM.launches = PreviewData.launches
-                    }
-                    // Uncomment to fetch real API data
-                    launchListVM.fetchLaunches()
-                }
+            ContentView()
         }
     }
 }

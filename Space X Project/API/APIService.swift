@@ -37,12 +37,9 @@ enum APIError: Error, LocalizedError {
     
     var errorDescription: String? {
         switch self {
-        case .invalidURL:
-            return "Invalid URL"
-        case .noData:
-            return "No data returned from server"
-        case .decodingError:
-            return "Failed to decode data"
+        case .invalidURL: return "Invalid URL"
+        case .noData: return "No data returned from server"
+        case .decodingError: return "Failed to decode data"
         }
     }
 }

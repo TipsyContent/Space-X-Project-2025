@@ -1,57 +1,63 @@
 //
-//  LaunchRow.swift
+//  LaunchRow 2.swift
 //  Space X Project
 //
 //  Created by Tipsy on 02/12/2025.
 //
-
 import SwiftUI
 
 struct LaunchRow: View {
     let launch: Launch
-
+    
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
             AsyncImage(url: URL(string: launch.links?.patch?.small ?? "")) { image in
                 image.resizable()
+                    .scaledToFill()
             } placeholder: {
                 Color.gray.opacity(0.3)
+                    .overlay(Image(systemName: "photo").foregroundColor(.gray))
             }
             .frame(width: 50, height: 50)
             .cornerRadius(8)
-
-            VStack(alignment: .leading) {
+            .clipped()
+            
+            VStack(alignment: .leading, spacing: 4) {
                 Text(launch.name)
                     .font(.headline)
                     .foregroundColor(.white)
-
                 Text(launch.dateFormatted)
-                    .font(.subheadline)
+                    .font(.caption)
                     .foregroundColor(.white.opacity(0.7))
-                
-                Text(successText)
-                    .font(.footnote)
-                    .foregroundColor(.white.opacity(0.7))
+                Text(successBadge)
+                    .font(.caption2)
+                    .foregroundColor(successColor)
+                    .fontWeight(.semibold)
             }
+            
             Spacer()
-
+            
             Image(systemName: "chevron.right")
-                .foregroundColor(.white.opacity(0.7))
-                .font(.system(size: 16, weight: .medium))
+                .foregroundColor(.white.opacity(0.5))
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
         .background(Color(hex: "045788"))
     }
     
-    private var successText: String {
+    private var successBadge: String {
         if let success = launch.success {
-            return success ? "Success" : "Failed"
+            return success ? "✓ Success" : "✗ Failed"
         }
-        return "Unknown"
+        return "Status Unknown"
+    }
+    
+    private var successColor: Color {
+        if let success = launch.success {
+            return success ? .green : .red
+        }
+        return .yellow
     }
 }
-
 
 #Preview {
     LaunchRow(launch: PreviewData.launch)
