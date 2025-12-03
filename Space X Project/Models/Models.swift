@@ -9,7 +9,7 @@ struct Launch: Codable, Identifiable, Hashable {
     let date_precision: String?
     let success: Bool?
     let upcoming: Bool?
-    let rocket: String
+    let rocket: String?
     let links: Links?
     let crew: [CrewMember]?
     let capsules: [String]?
