@@ -4,7 +4,7 @@
 //
 //  Created by Tipsy on 03/12/2025.
 //
-
+/*
 import SwiftUI
 import MapKit
 
@@ -218,3 +218,4 @@ struct LaunchpadDetailView: View {
     LaunchpadDetailView(launchpad: PreviewData.launchpads[0])
         .preferredColorScheme(.dark)
 }
+*/

@@ -8,7 +8,7 @@ struct ContentView: View {
                     Label("Launches", systemImage: "rocketship.fill")
                 }
             
-            LaunchPadMapView()
+            //LaunchPadMapView()
                 .tabItem {
                     Label("Launch Pads", systemImage: "map.fill")
                 }

@@ -227,7 +227,7 @@ struct Payload: Codable, Identifiable {
     let mass_lbs: Double?
 }
 
-struct Launchpad: Codable, Identifiable {
+struct Launchpad: Codable, Identifiable, Hashable {
     let id: String
     let name: String
     let full_name: String?
