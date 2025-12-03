@@ -9,29 +9,58 @@ final class APIService {
             throw APIError.invalidURL
         }
         
-        let (data, _) = try await URLSession.shared.data(from: url)
+        print("🔄 Fetching from: \(urlString)")
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        // Check HTTP response
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.noData
+        }
+        
+        print("📊 HTTP Status: \(httpResponse.statusCode)")
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.invalidURL
+        }
         
         do {
             let decoder = JSONDecoder()
-            return try decoder.decode(T.self, from: data)
+            decoder.dateDecodingStrategy = .iso8601
+            let decodedData = try decoder.decode(T.self, from: data)
+            print("✅ Successfully decoded data")
+            return decodedData
+        } catch let DecodingError.dataCorrupted(context) {
+            print("❌ Data corrupted: \(context.debugDescription)")
+            throw APIError.decodingError
+        } catch let DecodingError.keyNotFound(key, context) {
+            print("❌ Key not found: \(key), \(context.debugDescription)")
+            throw APIError.decodingError
+        } catch let DecodingError.typeMismatch(type, context) {
+            print("❌ Type mismatch: \(type), \(context.debugDescription)")
+            throw APIError.decodingError
         } catch {
-            // Throw the real decoding error to debug
-            throw error
+            print("❌ Decoding error: \(error.localizedDescription)")
+            if let data = String(data: data, encoding: .utf8) {
+                print("📝 Raw response: \(data.prefix(500))")
+            }
+            throw APIError.decodingError
         }
     }
-
 }
 
 enum APIError: Error, LocalizedError {
     case invalidURL
     case noData
     case decodingError
+    case networkError(String)
     
     var errorDescription: String? {
         switch self {
         case .invalidURL: return "Invalid URL"
         case .noData: return "No data returned from server"
         case .decodingError: return "Failed to decode data"
+        case .networkError(let message): return "Network error: \(message)"
         }
     }
 }
