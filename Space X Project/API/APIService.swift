@@ -32,17 +32,27 @@ final class APIService {
             return decodedData
         } catch let DecodingError.dataCorrupted(context) {
             print("❌ Data corrupted: \(context.debugDescription)")
+            print("❌ Coding path: \(context.codingPath.map { $0.stringValue }.joined(separator: " -> "))")
             throw APIError.decodingError
         } catch let DecodingError.keyNotFound(key, context) {
-            print("❌ Key not found: \(key), \(context.debugDescription)")
+            print("❌ Key not found: \(key.stringValue)")
+            print("❌ Context: \(context.debugDescription)")
+            print("❌ Coding path: \(context.codingPath.map { $0.stringValue }.joined(separator: " -> "))")
             throw APIError.decodingError
         } catch let DecodingError.typeMismatch(type, context) {
-            print("❌ Type mismatch: \(type), \(context.debugDescription)")
+            print("❌ Type mismatch for type: \(type)")
+            print("❌ Context: \(context.debugDescription)")
+            print("❌ Coding path: \(context.codingPath.map { $0.stringValue }.joined(separator: " -> "))")
+            throw APIError.decodingError
+        } catch let DecodingError.valueNotFound(type, context) {
+            print("❌ Value not found for type: \(type)")
+            print("❌ Context: \(context.debugDescription)")
+            print("❌ Coding path: \(context.codingPath.map { $0.stringValue }.joined(separator: " -> "))")
             throw APIError.decodingError
         } catch {
             print("❌ Decoding error: \(error.localizedDescription)")
             if let data = String(data: data, encoding: .utf8) {
-                print("📝 Raw response: \(data.prefix(500))")
+                print("📝 Raw response (first 1000 chars): \(data.prefix(1000))")
             }
             throw APIError.decodingError
         }
