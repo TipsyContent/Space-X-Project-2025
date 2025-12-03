@@ -47,7 +47,8 @@ struct PreviewData {
             window: 0,
             failures: nil,
             ships: ["Ship1", "Ship2"],
-            auto_update: true
+            auto_update: true,
+            launch_library_id: "d786d8fc-862b-45bf-8f7b-9ad862883f67"
         ),
         Launch(
             id: "2",
@@ -87,7 +88,8 @@ struct PreviewData {
             window: 0,
             failures: nil,
             ships: nil,
-            auto_update: true
+            auto_update: true,
+            launch_library_id: "a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6"
         )
     ]
 
