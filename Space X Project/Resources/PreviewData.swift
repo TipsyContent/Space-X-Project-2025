@@ -25,7 +25,9 @@ struct PreviewData {
                 wikipedia: "https://en.wikipedia.org/wiki/SpaceX_Crew-5",
                 presskit: nil
             ),
-            crew: ["62dd7196202306255024d13c"],
+            crew: [
+                Launch.CrewMember(crew: "62dd7196202306255024d13c", role: "Commander")
+            ],
             capsules: ["617c05591bad2c661a6e2909"],
             payloads: ["62dd73ed202306255024d145"],
             launchpad: "5e9e4502f509094188566f88",
