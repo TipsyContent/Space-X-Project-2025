@@ -1,14 +1,9 @@
-//
-//  LaunchPadMapView.swift
-//  Space X Project
-//
-//  Created by Tipsy on 03/12/2025.
-//
 import SwiftUI
 import MapKit
 
 struct LaunchPadMapView: View {
     @StateObject var viewModel: LaunchPadMapViewModel = LaunchPadMapViewModel()
+    @State private var selectedPad: Launchpad?
     
     @State private var region: MKCoordinateRegion = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 28.5, longitude: -80.5),
@@ -28,7 +23,7 @@ struct LaunchPadMapView: View {
                         Image(systemName: "exclamationmark.triangle")
                             .font(.system(size: 40))
                             .foregroundColor(.red)
-                        Text("Error loading landing pads")
+                        Text("Error loading launch pads")
                             .font(.headline)
                             .foregroundColor(.white)
                         Text(error)
@@ -38,35 +33,45 @@ struct LaunchPadMapView: View {
                     }
                     .padding()
                 } else if viewModel.launchPad.isEmpty {
-                    Text("No landing pads found")
+                    Text("No launch pads found")
                         .foregroundColor(.white)
                 } else {
                     Map(position: .constant(.region(region))) {
                         ForEach(viewModel.launchPad) { pad in
                             Annotation(pad.name, coordinate: CLLocationCoordinate2D(latitude: pad.latitude, longitude: pad.longitude)) {
-                                VStack(spacing: 4) {
-                                    Image(systemName: "location.fill")
-                                        .foregroundColor(.orange)
-                                        .font(.system(size: 24))
-                                    Text(pad.name)
-                                        .font(.caption2)
-                                        .foregroundColor(.white)
-                                        .lineLimit(1)
+                                NavigationLink(value: pad) {
+                                    VStack(spacing: 4) {
+                                        Image(systemName: "location.fill")
+                                            .foregroundColor(.orange)
+                                            .font(.system(size: 24))
+                                        Text(pad.name)
+                                            .font(.caption2)
+                                            .foregroundColor(.white)
+                                            .lineLimit(1)
+                                    }
+                                    .padding(8)
+                                    .background(Color.black.opacity(0.7))
+                                    .cornerRadius(8)
                                 }
-                                .padding(8)
-                                .background(Color.black.opacity(0.7))
-                                .cornerRadius(8)
                             }
                         }
                     }
                     .mapStyle(.standard(elevation: .realistic))
                 }
             }
-            .navigationTitle("Landing Pads")
+            .navigationTitle("Launch Pads")
             .navigationBarTitleDisplayMode(.large)
+            .navigationDestination(for: Launchpad.self) { pad in
+                LaunchpadDetailView(launchpad: pad)
+            }
             .task {
                 await viewModel.fetchLaunchPads()
             }
         }
     }
+}
+
+#Preview {
+    LaunchPadMapView()
+        .preferredColorScheme(.dark)
 }
