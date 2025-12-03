@@ -5,3 +5,17 @@
 //  Created by Tipsy on 03/12/2025.
 //
 
+load_eligibility_plist: Failed to open /Users/tipsy/Library/Developer/CoreSimulator/Devices/7D3616AE-E32B-44A7-A71C-36934192273F/data/Containers/Data/Application/EF9AE677-33F0-47A1-9460-6FCC8AD10334/private/var/db/eligibilityd/eligibility.plist: No such file or directory(2)
+No symbol named 'rocket.fill' found in system symbol set
+🔄 Fetching from: https://api.spacexdata.com/v5/launches
+🔄 Fetching from: https://api.spacexdata.com/v5/launches
+nw_connection_copy_connected_local_endpoint_block_invoke [C1] Connection has no local endpoint
+nw_connection_copy_connected_local_endpoint_block_invoke [C1] Connection has no local endpoint
+📊 HTTP Status: 200
+❌ Value not found for type: String
+❌ Context: Cannot get value of type String -- found null value instead
+❌ Coding path: Index 188 -> cores -> Index 0 -> core
+📊 HTTP Status: 200
+❌ Value not found for type: String
+❌ Context: Cannot get value of type String -- found null value instead
+❌ Coding path: Index 188 -> cores -> Index 0 -> core
