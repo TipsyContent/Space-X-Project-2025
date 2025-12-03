@@ -22,11 +22,10 @@ struct PreviewData {
                 webcast: "https://youtu.be/5EwW8ZkArL4",
                 youtube_id: "5EwW8ZkArL4",
                 article: nil,
-                wikipedia: "https://en.wikipedia.org/wiki/SpaceX_Crew-5"
+                wikipedia: "https://en.wikipedia.org/wiki/SpaceX_Crew-5",
+                presskit: nil
             ),
-            crew: [
-                Launch.LaunchCrew(crew: "62dd7196202306255024d13c", role: "Commander")
-            ],
+            crew: ["62dd7196202306255024d13c"],
             capsules: ["617c05591bad2c661a6e2909"],
             payloads: ["62dd73ed202306255024d145"],
             launchpad: "5e9e4502f509094188566f88",
@@ -38,7 +37,15 @@ struct PreviewData {
                 recovery_attempt: true,
                 recovered: true,
                 ships: ["Ship1", "Ship2"]
-            )
+            ),
+            static_fire_date_utc: nil,
+            static_fire_date_unix: nil,
+            tdb: false,
+            net: false,
+            window: 0,
+            failures: nil,
+            ships: ["Ship1", "Ship2"],
+            auto_update: true
         ),
         Launch(
             id: "2",
@@ -60,7 +67,8 @@ struct PreviewData {
                 webcast: nil,
                 youtube_id: nil,
                 article: nil,
-                wikipedia: nil
+                wikipedia: nil,
+                presskit: nil
             ),
             crew: nil,
             capsules: nil,
@@ -69,7 +77,15 @@ struct PreviewData {
             details: nil,
             flight_number: 188,
             cores: nil,
-            fairings: nil
+            fairings: nil,
+            static_fire_date_utc: nil,
+            static_fire_date_unix: nil,
+            tdb: false,
+            net: false,
+            window: 0,
+            failures: nil,
+            ships: nil,
+            auto_update: true
         )
     ]
 
