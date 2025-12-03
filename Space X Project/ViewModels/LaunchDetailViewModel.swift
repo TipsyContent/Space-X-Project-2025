@@ -23,7 +23,7 @@ final class LaunchDetailViewModel: ObservableObject {
         
         do {
             // Fetch Rocket
-            async let rocketFetch = RocketService.shared.fetchRocket(id: launch.rocket)
+            async let rocketFetch = RocketService.shared.fetchRocket(id: launch.rocket ?? "default")
             
             // Fetch Crew (if any)
             var crewMembers: [Crew] = []
