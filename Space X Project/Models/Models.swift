@@ -11,7 +11,7 @@ struct Launch: Codable, Identifiable, Hashable {
     let upcoming: Bool?
     let rocket: String
     let links: Links?
-    let crew: [LaunchCrew]?
+    let crew: [String]?  // Changed: API returns array of crew IDs, not LaunchCrew objects
     let capsules: [String]?
     let payloads: [String]?
     let launchpad: String?
@@ -19,6 +19,22 @@ struct Launch: Codable, Identifiable, Hashable {
     let flight_number: Int?
     let cores: [Core]?
     let fairings: Fairings?
+    
+    // Additional fields from API that were missing
+    let static_fire_date_utc: String?
+    let static_fire_date_unix: Int?
+    let tdb: Bool?
+    let net: Bool?
+    let window: Int?
+    let failures: [Failure]?
+    let ships: [String]?
+    let auto_update: Bool?
+    
+    struct Failure: Codable, Hashable {
+        let time: Int?
+        let altitude: Int?
+        let reason: String?
+    }
     
     struct Fairings: Codable, Hashable {
         let reused: Bool?
@@ -35,6 +51,7 @@ struct Launch: Codable, Identifiable, Hashable {
         let youtube_id: String?
         let article: String?
         let wikipedia: String?
+        let presskit: String?  // Added missing field
         
         struct Patch: Codable, Hashable {
             let small: String?
@@ -52,11 +69,6 @@ struct Launch: Codable, Identifiable, Hashable {
             let small: [String]?
             let original: [String]?
         }
-    }
-    
-    struct LaunchCrew: Codable, Hashable {
-        let crew: String
-        let role: String
     }
     
     struct Core: Codable, Hashable {
