@@ -5,7 +5,7 @@ struct ContentView: View {
         TabView {
             LaunchesTabView()
                 .tabItem {
-                    Label("Launches", systemImage: "rocket.fill")
+                    Label("Launches", systemImage: "rocketship.fill")
                 }
             
             LaunchPadMapView()

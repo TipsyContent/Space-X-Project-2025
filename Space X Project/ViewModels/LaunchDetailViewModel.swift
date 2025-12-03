@@ -31,7 +31,7 @@ final class LaunchDetailViewModel: ObservableObject {
                 crewMembers = try await withThrowingTaskGroup(of: Crew?.self) { group in
                     for crewMember in crewList {
                         group.addTask {
-                            try? await CrewService.shared.fetchCrew(id: crewMember.crew)
+                            try? await CrewService.shared.fetchCrew(id: crewMember.crew ?? "")
                         }
                     }
                     var results: [Crew] = []
