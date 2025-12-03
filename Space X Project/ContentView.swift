@@ -8,9 +8,9 @@ struct ContentView: View {
                     Label("Launches", systemImage: "rocket.fill")
                 }
             
-            LandingPadMapView()
+            LaunchPadMapView()
                 .tabItem {
-                    Label("Landing Pads", systemImage: "map.fill")
+                    Label("Launch Pads", systemImage: "map.fill")
                 }
         }
         .preferredColorScheme(.dark)
@@ -43,14 +43,14 @@ struct ContentView: View {
             Image(systemName: "map.fill")
                 .font(.system(size: 50))
                 .foregroundColor(.blue)
-            Text("Landing Pads Map")
+            Text("Launch Pads Map")
                 .font(.headline)
                 .foregroundColor(.white)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(hex: "023E61"))
         .tabItem {
-            Label("Landing Pads", systemImage: "map.fill")
+            Label("Launch Pads", systemImage: "map.fill")
         }
     }
     .preferredColorScheme(.dark)

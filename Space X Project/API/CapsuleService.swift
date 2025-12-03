@@ -10,8 +10,10 @@ final class CapsuleService {
     static let shared = CapsuleService()
     private init() {}
     
-    func fetchCapsule(id: String, completion: @escaping (Result<Capsule, Error>) -> Void) {
+    // Fetch a single capsule asynchronously
+    func fetchCapsule(id: String) async throws -> Capsule {
         let url = "https://api.spacexdata.com/v4/capsules/\(id)"
-        APIService.shared.fetchData(from: url, type: Capsule.self, completion: completion)
+        return try await APIService.shared.fetchData(from: url, type: Capsule.self)
     }
 }
+

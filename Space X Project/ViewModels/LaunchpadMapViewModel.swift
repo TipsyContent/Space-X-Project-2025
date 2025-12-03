@@ -7,27 +7,24 @@
 
 import Foundation
 
-/// ViewModel for managing landing pad map data
 @MainActor
-final class LandingPadMapViewModel2: ObservableObject {
-    @Published var landingPads: [LandingPad] = []
+final class LaunchPadMapViewModel: ObservableObject {
+    @Published var launchPad: [Launchpad] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    /// Fetches all landing pads from the LandingPadService
-    func fetchLandingPads() {
+    // Async fetch
+    func fetchLaunchPads() async {
         isLoading = true
         errorMessage = nil
         
-        LandingPadService.shared.fetchAllLandingPads { [weak self] result in
-            switch result {
-            case .success(let landingPads):
-                self?.landingPads = landingPads
-                self?.isLoading = false
-            case .failure(let error):
-                self?.errorMessage = error.localizedDescription
-                self?.isLoading = false
-            }
+        do {
+            let pads = try await LaunchPadService.shared.fetchAllLaunchPads()
+            launchPad = pads
+            isLoading = false
+        } catch {
+            errorMessage = error.localizedDescription
+            isLoading = false
         }
     }
 }

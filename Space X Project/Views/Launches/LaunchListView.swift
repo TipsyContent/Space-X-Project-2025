@@ -61,6 +61,7 @@ struct ErrorView: View {
 }
 
 #Preview {
+    // Create a view model and inject preview launches
     let vm = LaunchListViewModel()
     vm.launches = PreviewData.launches
     

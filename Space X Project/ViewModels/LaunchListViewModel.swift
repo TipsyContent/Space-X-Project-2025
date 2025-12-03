@@ -14,19 +14,18 @@ final class LaunchListViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    func fetchLaunches() {
+    func fetchLaunches() async {
         isLoading = true
         errorMessage = nil
         
-        LaunchService.shared.fetchAllLaunches { [weak self] result in
-            switch result {
-            case .success(let launches):
-                self?.launches = launches
-                self?.isLoading = false
-            case .failure(let error):
-                self?.errorMessage = error.localizedDescription
-                self?.isLoading = false
-            }
+        do {
+            let launches = try await LaunchService.shared.fetchAllLaunches()
+            self.launches = launches.sorted { $0.date_utc > $1.date_utc }
+            isLoading = false
+        } catch {
+            errorMessage = error.localizedDescription
+            isLoading = false
         }
     }
 }
+

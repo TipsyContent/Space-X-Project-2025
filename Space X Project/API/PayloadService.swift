@@ -11,8 +11,8 @@ final class PayloadService {
     static let shared = PayloadService()
     private init() {}
     
-    func fetchPayload(id: String, completion: @escaping (Result<Payload, Error>) -> Void) {
+    func fetchPayload(id: String) async throws -> Payload  {
         let url = "https://api.spacexdata.com/v4/payloads/\(id)"
-        APIService.shared.fetchData(from: url, type: Payload.self, completion: completion)
+        return try await APIService.shared.fetchData(from: url, type: Payload.self)
     }
 }

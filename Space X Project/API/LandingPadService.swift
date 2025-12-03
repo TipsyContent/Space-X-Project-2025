@@ -4,13 +4,15 @@ final class LandingPadService {
     static let shared = LandingPadService()
     private init() {}
     
-    func fetchLandingPad(id: String, completion: @escaping (Result<LandingPad, Error>) -> Void) {
+    // Fetch a single landing pad asynchronously
+    func fetchLandingPad(id: String) async throws -> LandingPad {
         let url = "https://api.spacexdata.com/v4/landpads/\(id)"
-        APIService.shared.fetchData(from: url, type: LandingPad.self, completion: completion)
+        return try await APIService.shared.fetchData(from: url, type: LandingPad.self)
     }
     
-    func fetchAllLandingPads(completion: @escaping (Result<[LandingPad], Error>) -> Void) {
+    // Fetch all landing pads asynchronously
+    func fetchAllLandingPads() async throws -> [LandingPad] {
         let url = "https://api.spacexdata.com/v4/landpads"
-        APIService.shared.fetchData(from: url, type: [LandingPad].self, completion: completion)
+        return try await APIService.shared.fetchData(from: url, type: [LandingPad].self)
     }
 }

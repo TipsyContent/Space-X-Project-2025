@@ -1,27 +1,23 @@
-import Foundation
-
 final class LaunchService {
     static let shared = LaunchService()
     private init() {}
     
     private let baseURL = "https://api.spacexdata.com/v5/launches"
     
-    func fetchAllLaunches(completion: @escaping (Result<[Launch], Error>) -> Void) {
-        APIService.shared.fetchData(from: baseURL, type: [Launch].self) { result in
-            switch result {
-            case .success(let launches):
-                DispatchQueue.main.async {
-                    let sorted = launches.sorted { $0.date_utc > $1.date_utc }
-                    completion(.success(sorted))
-                }
-            case .failure(let error):
-                DispatchQueue.main.async { completion(.failure(error)) }
-            }
-        }
+    // Fetch all launches that have a crew
+    func fetchAllLaunches() async throws -> [Launch] {
+        let launches: [Launch] = try await APIService.shared.fetchData(from: baseURL, type: [Launch].self)
+        
+        // Filter launches with non-empty crew
+        let crewed = launches.filter { !($0.crew?.isEmpty ?? true) }
+        
+        // Sort by date descending
+        return crewed.sorted { $0.date_utc > $1.date_utc }
     }
     
-    func fetchLaunch(id: String, completion: @escaping (Result<Launch, Error>) -> Void) {
+    // Fetch a single launch by ID
+    func fetchLaunch(id: String) async throws -> Launch {
         let url = "\(baseURL)/\(id)"
-        APIService.shared.fetchData(from: url, type: Launch.self, completion: completion)
+        return try await APIService.shared.fetchData(from: url, type: Launch.self)
     }
 }

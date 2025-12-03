@@ -1,10 +1,3 @@
-//
-//  LaunchDetailViewModel.swift
-//  Space X Project
-//
-//  Created by Tipsy on 02/12/2025.
-//
-
 import Foundation
 
 @MainActor
@@ -22,46 +15,50 @@ final class LaunchDetailViewModel: ObservableObject {
         self.isSaved = LaunchStorage.shared.isLaunchSaved(launch.id)
     }
     
-    func loadDetails() {
+    // Async load details
+    func loadDetails() async {
         isLoading = true
         errorMessage = nil
-        let group = DispatchGroup()
+        crew = []
         
-        // Fetch Rocket
-        group.enter()
-        RocketService.shared.fetchRocket(id: launch.rocket) { [weak self] result in
-            if case .success(let rocket) = result {
-                self?.rocket = rocket
-            }
-            group.leave()
-        }
-        
-        // Fetch Crew
-        if let crew = launch.crew, !crew.isEmpty {
-            for crewMember in crew {
-                group.enter()
-                CrewService.shared.fetchCrew(id: crewMember.crew) { [weak self] result in
-                    if case .success(let crewData) = result {
-                        self?.crew.append(crewData)
+        do {
+            // Fetch Rocket
+            async let rocketFetch = RocketService.shared.fetchRocket(id: launch.rocket)
+            
+            // Fetch Crew (if any)
+            var crewMembers: [Crew] = []
+            if let crewList = launch.crew, !crewList.isEmpty {
+                crewMembers = try await withThrowingTaskGroup(of: Crew?.self) { group in
+                    for crewMember in crewList {
+                        group.addTask {
+                            try? await CrewService.shared.fetchCrew(id: crewMember.crew)
+                        }
                     }
-                    group.leave()
+                    var results: [Crew] = []
+                    for try await result in group {
+                        if let result = result {
+                            results.append(result)
+                        }
+                    }
+                    return results
                 }
             }
-        }
-        
-        // Fetch Launchpad
-        if let launchpadId = launch.launchpad {
-            group.enter()
-            LaunchPadService.shared.fetchLaunchPad(id: launchpadId) { [weak self] result in
-                if case .success(let launchpad) = result {
-                    self?.launchpad = launchpad
-                }
-                group.leave()
+            
+            // Fetch Launchpad (if available)
+            var launchpadData: Launchpad? = nil
+            if let launchpadId = launch.launchpad {
+                launchpadData = try await LaunchPadService.shared.fetchLaunchPad(id: launchpadId)
             }
-        }
-        
-        group.notify(queue: .main) { [weak self] in
-            self?.isLoading = false
+            
+            // Await rocket and assign all results
+            rocket = try await rocketFetch
+            crew = crewMembers
+            launchpad = launchpadData
+            isLoading = false
+            
+        } catch {
+            errorMessage = error.localizedDescription
+            isLoading = false
         }
     }
     

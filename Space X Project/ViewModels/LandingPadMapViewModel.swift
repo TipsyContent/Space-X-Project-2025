@@ -14,21 +14,18 @@ final class LandingPadMapViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    func fetchLandingPads() {
+    // Async fetch method
+    func fetchLandingPads() async {
         isLoading = true
         errorMessage = nil
         
-        LandingPadService.shared.fetchAllLandingPads { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let landingPads):
-                    self?.landingPads = landingPads
-                    self?.isLoading = false
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                    self?.isLoading = false
-                }
-            }
+        do {
+            let pads = try await LandingPadService.shared.fetchAllLandingPads()
+            landingPads = pads
+            isLoading = false
+        } catch {
+            errorMessage = error.localizedDescription
+            isLoading = false
         }
     }
 }

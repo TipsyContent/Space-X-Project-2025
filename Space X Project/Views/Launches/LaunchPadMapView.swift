@@ -1,24 +1,29 @@
+//
+//  LaunchPadMapView.swift
+//  Space X Project
+//
+//  Created by Tipsy on 03/12/2025.
+//
 import SwiftUI
 import MapKit
 
-struct LandingPadMapView: View {
-    @StateObject var viewModel: LandingPadMapViewModel = LandingPadMapViewModel()
+struct LaunchPadMapView: View {
+    @StateObject var viewModel: LaunchPadMapViewModel = LaunchPadMapViewModel()
     
-
     @State private var region: MKCoordinateRegion = MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: 28.5, longitude: -80.5),
-            span: MKCoordinateSpan(latitudeDelta: 40, longitudeDelta: 40)
-        )
+        center: CLLocationCoordinate2D(latitude: 28.5, longitude: -80.5),
+        span: MKCoordinateSpan(latitudeDelta: 40, longitudeDelta: 40)
+    )
     
     var body: some View {
         NavigationStack {
             ZStack {
                 Color(hex: "023E61").edgesIgnoringSafeArea(.all)
                 
-                if viewModel.isLoading && viewModel.landingPads.isEmpty {
+                if viewModel.isLoading && viewModel.launchPad.isEmpty {
                     ProgressView()
                         .tint(.blue)
-                } else if let error = viewModel.errorMessage, viewModel.landingPads.isEmpty {
+                } else if let error = viewModel.errorMessage, viewModel.launchPad.isEmpty {
                     VStack(spacing: 12) {
                         Image(systemName: "exclamationmark.triangle")
                             .font(.system(size: 40))
@@ -32,12 +37,12 @@ struct LandingPadMapView: View {
                             .multilineTextAlignment(.center)
                     }
                     .padding()
-                } else if viewModel.landingPads.isEmpty {
+                } else if viewModel.launchPad.isEmpty {
                     Text("No landing pads found")
                         .foregroundColor(.white)
                 } else {
                     Map(position: .constant(.region(region))) {
-                        ForEach(viewModel.landingPads) { pad in
+                        ForEach(viewModel.launchPad) { pad in
                             Annotation(pad.name, coordinate: CLLocationCoordinate2D(latitude: pad.latitude, longitude: pad.longitude)) {
                                 VStack(spacing: 4) {
                                     Image(systemName: "location.fill")
@@ -60,7 +65,7 @@ struct LandingPadMapView: View {
             .navigationTitle("Landing Pads")
             .navigationBarTitleDisplayMode(.large)
             .task {
-                await viewModel.fetchLandingPads()
+                await viewModel.fetchLaunchPads()
             }
         }
     }

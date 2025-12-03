@@ -4,30 +4,22 @@ final class APIService {
     static let shared = APIService()
     private init() {}
     
-    func fetchData<T: Codable>(from urlString: String, type: T.Type, completion: @escaping (Result<T, Error>) -> Void) {
+    func fetchData<T: Codable>(from urlString: String, type: T.Type) async throws -> T {
         guard let url = URL(string: urlString) else {
-            DispatchQueue.main.async { completion(.failure(APIError.invalidURL)) }
-            return
+            throw APIError.invalidURL
         }
         
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            if let error = error {
-                DispatchQueue.main.async { completion(.failure(error)) }
-                return
-            }
-            guard let data = data else {
-                DispatchQueue.main.async { completion(.failure(APIError.noData)) }
-                return
-            }
-            do {
-                let decoder = JSONDecoder()
-                let decoded = try decoder.decode(T.self, from: data)
-                DispatchQueue.main.async { completion(.success(decoded)) }
-            } catch {
-                DispatchQueue.main.async { completion(.failure(error)) }
-            }
-        }.resume()
+        let (data, _) = try await URLSession.shared.data(from: url)
+        
+        do {
+            let decoder = JSONDecoder()
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            // Throw the real decoding error to debug
+            throw error
+        }
     }
+
 }
 
 enum APIError: Error, LocalizedError {

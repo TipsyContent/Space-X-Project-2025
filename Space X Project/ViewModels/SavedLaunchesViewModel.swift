@@ -12,32 +12,45 @@ final class SavedLaunchesViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    func loadSavedLaunches() {
+    // Async load saved launches
+    func loadSavedLaunches() async {
         isLoading = true
-        let savedIDs = LaunchStorage.shared.getSavedLaunchIDs()
+        errorMessage = nil
+        launches = []
         
-        if savedIDs.isEmpty {
-            self.launches = []
-            self.isLoading = false
+        let savedIDs = LaunchStorage.shared.getSavedLaunchIDs()
+        guard !savedIDs.isEmpty else {
+            isLoading = false
             return
         }
         
-        var loadedLaunches: [Launch] = []
-        let group = DispatchGroup()
-        
-        for id in savedIDs {
-            group.enter()
-            LaunchService.shared.fetchLaunch(id: id) { result in
-                if case .success(let launch) = result {
-                    loadedLaunches.append(launch)
+        do {
+            var loadedLaunches: [Launch] = []
+            
+            // Fetch all launches in parallel
+            loadedLaunches = try await withThrowingTaskGroup(of: Launch?.self) { group in
+                for id in savedIDs {
+                    group.addTask {
+                        try? await LaunchService.shared.fetchLaunch(id: id)
+                    }
                 }
-                group.leave()
+                
+                var results: [Launch] = []
+                for try await launch in group {
+                    if let launch = launch {
+                        results.append(launch)
+                    }
+                }
+                return results
             }
-        }
-        
-        group.notify(queue: .main) { [weak self] in
-            self?.launches = loadedLaunches.sorted { $0.date_utc > $1.date_utc }
-            self?.isLoading = false
+            
+            // Sort by date descending
+            launches = loadedLaunches.sorted { $0.date_utc > $1.date_utc }
+            isLoading = false
+            
+        } catch {
+            errorMessage = error.localizedDescription
+            isLoading = false
         }
     }
 }

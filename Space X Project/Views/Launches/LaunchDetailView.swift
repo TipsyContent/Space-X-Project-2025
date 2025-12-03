@@ -37,8 +37,8 @@ struct LaunchDetailView: View {
             }
             .navigationTitle("Launch Details")
             .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                viewModel.loadDetails()
+            .task {
+                await viewModel.loadDetails()
             }
         }
     }

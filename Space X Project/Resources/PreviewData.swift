@@ -32,7 +32,13 @@ struct PreviewData {
             launchpad: "5e9e4502f509094188566f88",
             details: nil,
             flight_number: 187,
-            cores: nil
+            cores: nil,
+            fairings: Launch.Fairings(
+                reused: true,
+                recovery_attempt: true,
+                recovered: true,
+                ships: ["Ship1", "Ship2"]
+            )
         ),
         Launch(
             id: "2",
@@ -62,9 +68,11 @@ struct PreviewData {
             launchpad: "5e9e4502f509094188566f88",
             details: nil,
             flight_number: 188,
-            cores: nil
+            cores: nil,
+            fairings: nil
         )
     ]
+
     
     static let launch = launches[0]
     

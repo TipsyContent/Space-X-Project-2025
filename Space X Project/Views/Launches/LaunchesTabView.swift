@@ -28,17 +28,17 @@ struct LaunchesTabView: View {
                         viewModel: savedLaunchesVM,
                         navigationPath: $navigationPath
                     )
-                    .onAppear {
-                        savedLaunchesVM.loadSavedLaunches()
+                    .task {
+                        await savedLaunchesVM.loadSavedLaunches()
                     }
                 } else {
                     LaunchListView(
                         viewModel: launchListVM,
                         navigationPath: $navigationPath
                     )
-                    .onAppear {
+                    .task {
                         if launchListVM.launches.isEmpty {
-                            launchListVM.fetchLaunches()
+                            await launchListVM.fetchLaunches()
                         }
                     }
                 }

@@ -18,6 +18,14 @@ struct Launch: Codable, Identifiable, Hashable {
     let details: String?
     let flight_number: Int?
     let cores: [Core]?
+    let fairings: Fairings?
+    
+    struct Fairings: Codable, Hashable {
+        let reused: Bool?
+        let recovery_attempt: Bool?
+        let recovered: Bool?
+        let ships: [String]?
+    }
     
     struct Links: Codable, Hashable {
         let patch: Patch?
