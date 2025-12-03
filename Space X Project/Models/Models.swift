@@ -32,8 +32,8 @@ struct Launch: Codable, Identifiable, Hashable {
     let launch_library_id: String?
     
     struct CrewMember: Codable, Hashable {
-        let crew: String  // Crew ID
-        let role: String
+        let crew: String?
+        let role: String?
     }
     
     struct Failure: Codable, Hashable {
@@ -78,7 +78,7 @@ struct Launch: Codable, Identifiable, Hashable {
     }
     
     struct Core: Codable, Hashable {
-        let core: String
+        let core: String?
         let flight: Int?
         let gridfins: Bool?
         let legs: Bool?
@@ -108,6 +108,7 @@ struct Launch: Codable, Identifiable, Hashable {
         lhs.id == rhs.id
     }
 }
+
 
 
 struct Rocket: Codable, Identifiable {
