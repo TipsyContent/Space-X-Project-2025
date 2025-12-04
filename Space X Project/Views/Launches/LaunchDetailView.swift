@@ -132,6 +132,16 @@ struct LaunchDetailView: View {
         }
     }
     
+    @ViewBuilder
+    private var landingPadSection: some View {
+        if let landingPad = viewModel.landingPad {
+            LaunchDetailSectionView(
+                title: "Landing Pad",
+                content: buildLandingPadContent(landingPad)
+            )
+        }
+    }
+    
     // MARK: - Helpers
     
     private var statusIcon: String {
@@ -188,6 +198,27 @@ struct LaunchDetailView: View {
         }
         return content
     }
+    
+    private func buildLandingPadContent(_ pad: LandingPad) -> [String] {
+        var content: [String] = [pad.name]
+        if let fullName = pad.full_name {
+            content.append("Full Name: \(fullName)")
+        }
+        if let type = pad.type {
+            content.append("Type: \(type)")
+        }
+        if let locality = pad.locality {
+            content.append("Location: \(locality)")
+        }
+        if let attempts = pad.landing_attempts {
+            content.append("Landing Attempts: \(attempts)")
+        }
+        if let successes = pad.landing_successes {
+            content.append("Successful Landings: \(successes)")
+        }
+        return content
+    }
+    
 }
 
 struct LaunchDetailSectionView: View {

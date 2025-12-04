@@ -6,6 +6,7 @@ final class LaunchDetailViewModel: ObservableObject {
     @Published var rocket: Rocket?
     @Published var crew: [Crew] = []
     @Published var launchpad: Launchpad?
+    @Published var landingPad: LandingPad?
     @Published var isLoading = false
     @Published var isSaved = false
     @Published var errorMessage: String?
@@ -15,7 +16,7 @@ final class LaunchDetailViewModel: ObservableObject {
         self.isSaved = LaunchStorage.shared.isLaunchSaved(launch.id)
     }
     
-    // Async load details
+    // Load all launch details
     func loadDetails() async {
         isLoading = true
         errorMessage = nil
@@ -50,10 +51,22 @@ final class LaunchDetailViewModel: ObservableObject {
                 launchpadData = try await LaunchPadService.shared.fetchLaunchPad(id: launchpadId)
             }
             
+            // Fetch Landing Pad (if available)
+            var landingPadData: LandingPad? = nil
+            if let cores = launch.cores, !cores.isEmpty {
+                for core in cores {
+                    if let landpadId = core.landpad {
+                        landingPadData = try await LandingPadService.shared.fetchLandingPad(id: landpadId)
+                        break  // Only load first landing pad
+                    }
+                }
+            }
+            
             // Await rocket and assign all results
             rocket = try await rocketFetch
             crew = crewMembers
             launchpad = launchpadData
+            landingPad = landingPadData
             isLoading = false
             
         } catch {
@@ -61,6 +74,7 @@ final class LaunchDetailViewModel: ObservableObject {
             isLoading = false
         }
     }
+    
     
     func toggleSave() {
         if isSaved {
