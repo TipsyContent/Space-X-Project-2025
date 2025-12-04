@@ -52,6 +52,7 @@ struct SignUpEmailView: View {
             Spacer()
         }
         .padding()
+        .background(Color(hex: "023E61"))
         .navigationTitle("Sign Up With Email")
     }
 }
@@ -60,4 +61,5 @@ struct SignUpEmailView: View {
     NavigationStack {
         SignUpEmailView()
     }
+    .preferredColorScheme(.dark)
 }

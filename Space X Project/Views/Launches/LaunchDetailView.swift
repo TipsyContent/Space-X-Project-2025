@@ -14,6 +14,7 @@ struct LaunchDetailView: View {
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
+                    
                     headerView
                     divider
                     saveButton
@@ -23,8 +24,11 @@ struct LaunchDetailView: View {
                     crewSection
                     launchpadSection
                     mediaSection
+                    
                 }
+                .frame(maxWidth: .infinity)
                 .padding()
+                
             }
         }
         .navigationTitle("Launch Details")
@@ -74,7 +78,14 @@ struct LaunchDetailView: View {
     }
     
     private var saveButton: some View {
-        Button(action: { viewModel.toggleSave() }) {
+        Button(action: {
+            if viewModel.isSaved {
+                LaunchStorage.shared.removeLaunchID(viewModel.launch.id)
+            } else {
+                LaunchStorage.shared.saveLaunchID(viewModel.launch.id)
+            }
+            viewModel.isSaved.toggle()
+        }) {
             HStack {
                 Image(systemName: viewModel.isSaved ? "bookmark.fill" : "bookmark")
                 Text(viewModel.isSaved ? "Saved" : "Save Launch")
@@ -240,6 +251,7 @@ struct LaunchDetailSectionView: View {
             }
             .padding(.leading, 8)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
         .background(Color(hex: "034B7A").opacity(0.6))
         .cornerRadius(8)

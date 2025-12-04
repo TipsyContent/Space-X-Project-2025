@@ -1,24 +1,21 @@
-//
-//  SavedLaunchesViewModel.swift
-//  Space X Project
-//
-//  Created by Tipsy on 02/12/2025.
-//
 import Foundation
 
+// MARK: - SavedLaunchesViewModel
+// Loader gemte launches fra Firebase Firestore
 @MainActor
 final class SavedLaunchesViewModel: ObservableObject {
     @Published var launches: [Launch] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    // Async load saved launches
+    // MARK: - Load saved launches
     func loadSavedLaunches() async {
         isLoading = true
         errorMessage = nil
         launches = []
         
-        let savedIDs = LaunchStorage.shared.getSavedLaunchIDs()
+        let savedIDs = await LaunchStorage.shared.getSavedLaunchIDs()
+        
         guard !savedIDs.isEmpty else {
             isLoading = false
             return
@@ -27,7 +24,6 @@ final class SavedLaunchesViewModel: ObservableObject {
         do {
             var loadedLaunches: [Launch] = []
             
-            // Fetch all launches in parallel
             loadedLaunches = try await withThrowingTaskGroup(of: Launch?.self) { group in
                 for id in savedIDs {
                     group.addTask {
@@ -44,8 +40,7 @@ final class SavedLaunchesViewModel: ObservableObject {
                 return results
             }
             
-            // Sort by date descending
-            launches = loadedLaunches.sorted { $0.date_utc > $1.date_utc }
+            self.launches = loadedLaunches.sorted { $0.date_utc > $1.date_utc }
             isLoading = false
             
         } catch {

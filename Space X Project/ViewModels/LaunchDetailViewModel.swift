@@ -1,5 +1,8 @@
 import Foundation
 
+// MARK: - LaunchDetailViewModel
+// ViewModel for launch detail view
+// Loader rocket, crew, launchpad og landing pad data asyncronopnt
 @MainActor
 final class LaunchDetailViewModel: ObservableObject {
     @Published var launch: Launch
@@ -13,14 +16,18 @@ final class LaunchDetailViewModel: ObservableObject {
     
     init(launch: Launch) {
         self.launch = launch
-        self.isSaved = LaunchStorage.shared.isLaunchSaved(launch.id)
+        self.isSaved = false
+        // Will check if saved when loadDetails is called
     }
     
-    // Load all launch details
+    // MARK: - Load all launch details
     func loadDetails() async {
         isLoading = true
         errorMessage = nil
         crew = []
+        
+        // Check if saved
+        isSaved = await LaunchStorage.shared.isLaunchSaved(launch.id)
         
         do {
             // Fetch Rocket
@@ -57,7 +64,7 @@ final class LaunchDetailViewModel: ObservableObject {
                 for core in cores {
                     if let landpadId = core.landpad {
                         landingPadData = try await LandingPadService.shared.fetchLandingPad(id: landpadId)
-                        break  // Only load first landing pad
+                        break
                     }
                 }
             }
@@ -75,7 +82,7 @@ final class LaunchDetailViewModel: ObservableObject {
         }
     }
     
-    
+    // MARK: - Toggle save launch
     func toggleSave() {
         if isSaved {
             LaunchStorage.shared.removeLaunchID(launch.id)

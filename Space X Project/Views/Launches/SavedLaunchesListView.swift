@@ -1,14 +1,7 @@
-//
-//  SavedLaunchesListView.swift
-//  Space X Project
-//
-//  Created by Tipsy on 02/12/2025.
-//
-
 import SwiftUI
 
 struct SavedLaunchesListView: View {
-    @ObservedObject var viewModel: SavedLaunchesViewModel
+    @StateObject private var viewModel = SavedLaunchesViewModel()
     @Binding var navigationPath: NavigationPath
     
     var body: some View {
@@ -19,14 +12,30 @@ struct SavedLaunchesListView: View {
                 ProgressView()
                     .tint(.blue)
             } else if let error = viewModel.errorMessage {
-                ErrorView(error: error)
+                VStack(spacing: 12) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.system(size: 40))
+                        .foregroundColor(.red)
+                    Text("Error loading saved launches")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .multilineTextAlignment(.center)
+                }
+                .padding()
             } else if viewModel.launches.isEmpty {
                 VStack(spacing: 12) {
                     Image(systemName: "bookmark.slash")
                         .font(.system(size: 40))
                         .foregroundColor(.gray)
                     Text("No saved launches")
+                        .font(.headline)
                         .foregroundColor(.white)
+                    Text("Save launches to view them here")
+                        .font(.caption)
+                        .foregroundColor(.gray)
                 }
             } else {
                 List {
@@ -43,6 +52,18 @@ struct SavedLaunchesListView: View {
                 .listStyle(.plain)
             }
         }
+        .navigationDestination(for: Launch.self) { launch in
+            LaunchDetailView(launch: launch)
+        }
+        .task {
+            await viewModel.loadSavedLaunches()
+        }
     }
 }
 
+#Preview {
+    NavigationStack {
+        SavedLaunchesListView(navigationPath: .constant(NavigationPath()))
+    }
+    .preferredColorScheme(.dark)
+}

@@ -1,21 +1,18 @@
-//
-//  LaunchesTabView.swift
-//  Space X Project
-//
-//  Created by Tipsy on 02/12/2025.
-//
-
 import SwiftUI
 
+// MARK: - LaunchesTabView
+// Tab view med toggle mellem alle launches og gemte launches
+// Bruger LaunchListViewModel for alle launches
+// Bruger SavedLaunchesViewModel for gemte launches
 struct LaunchesTabView: View {
     @StateObject var launchListVM = LaunchListViewModel()
-    @StateObject var savedLaunchesVM = SavedLaunchesViewModel()
     @State private var showSavedOnly = false
     @State private var navigationPath = NavigationPath()
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
             VStack {
+                // MARK: - Picker for All/Saved toggle
                 Picker("View", selection: $showSavedOnly) {
                     Text("All Launches").tag(false)
                     Text("Saved Launches").tag(true)
@@ -23,14 +20,9 @@ struct LaunchesTabView: View {
                 .pickerStyle(.segmented)
                 .padding()
                 
+                // MARK: - Conditional views
                 if showSavedOnly {
-                    SavedLaunchesListView(
-                        viewModel: savedLaunchesVM,
-                        navigationPath: $navigationPath
-                    )
-                    .task {
-                        await savedLaunchesVM.loadSavedLaunches()
-                    }
+                    SavedLaunchesListView(navigationPath: $navigationPath)
                 } else {
                     LaunchListView(
                         viewModel: launchListVM,
