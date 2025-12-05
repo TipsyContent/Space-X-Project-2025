@@ -6,7 +6,10 @@
 //
 
 import Foundation
-
+// ViewModel for managing launch pad map view state and data
+// Fetches all launch pads from SpaceX API for displaying on map
+// Manages loading state and error handling
+// @MainActor ensures all methods/properties are main-thread safe
 @MainActor
 final class LaunchPadMapViewModel: ObservableObject {
     @Published var launchPad: [Launchpad] = []

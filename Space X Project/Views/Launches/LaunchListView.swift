@@ -1,5 +1,7 @@
 import SwiftUI
 
+// Displays a list of SpaceX launches using a list view.
+// Handles loading, error states, and navigation to launch details.
 struct LaunchListView: View {
     @ObservedObject var viewModel: LaunchListViewModel
     @Binding var navigationPath: NavigationPath
@@ -9,14 +11,18 @@ struct LaunchListView: View {
             ZStack {
                 Color(hex: "023E61").edgesIgnoringSafeArea(.all)
                 
+                // Loading indicator shown only when list is empty
                 if viewModel.isLoading && viewModel.launches.isEmpty {
                     ProgressView()
                         .tint(.blue)
                 } else if let error = viewModel.errorMessage {
                     ErrorView(error: error)
+                    // Fallback if no launches exist
                 } else if viewModel.launches.isEmpty {
                     Text("No launches available")
                         .foregroundColor(.white)
+                    
+                    // Main launch list
                 } else {
                     List {
                         ForEach(viewModel.launches) { launch in
@@ -43,6 +49,7 @@ struct LaunchListView: View {
     }
 }
 
+// Reusable view displaying error information
 struct ErrorView: View {
     let error: String
     

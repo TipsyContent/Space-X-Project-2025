@@ -1,9 +1,12 @@
 import SwiftUI
 import MapKit
 
+// Displays a map with all launch pads as annotations
+// Users can tap on an annotation to navigate to LaunchpadDetailView
 struct LaunchPadMapView: View {
     @StateObject var viewModel: LaunchPadMapViewModel = LaunchPadMapViewModel()
     
+    // Default region somewhat over the main Pads
     @State private var region: MKCoordinateRegion = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 28.5, longitude: -80.5),
         span: MKCoordinateSpan(latitudeDelta: 40, longitudeDelta: 40)
@@ -14,9 +17,12 @@ struct LaunchPadMapView: View {
             ZStack {
                 Color(hex: "023E61").edgesIgnoringSafeArea(.all)
                 
+                // Loading state: show progress indicator if data is loading and no pads yet
                 if viewModel.isLoading && viewModel.launchPad.isEmpty {
                     ProgressView()
                         .tint(.blue)
+                    
+                    // Error state: show error message if fetching failed
                 } else if let error = viewModel.errorMessage, viewModel.launchPad.isEmpty {
                     VStack(spacing: 12) {
                         Image(systemName: "exclamationmark.triangle")
@@ -34,6 +40,8 @@ struct LaunchPadMapView: View {
                 } else if viewModel.launchPad.isEmpty {
                     Text("No launch pads found")
                         .foregroundColor(.white)
+                    
+                    // Map view with annotations for each launch pad
                 } else {
                     Map(position: .constant(.region(region))) {
                         ForEach(viewModel.launchPad) { pad in

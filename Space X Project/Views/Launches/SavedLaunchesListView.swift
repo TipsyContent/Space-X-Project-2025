@@ -1,5 +1,8 @@
 import SwiftUI
 
+// Displays a list of launches the user has bookmarked/Saved to their account.
+// Handles loading state, error state, and empty state.
+// Uses a NavigationPath to push into LaunchDetailView.
 struct SavedLaunchesListView: View {
     @StateObject private var viewModel = SavedLaunchesViewModel()
     @Binding var navigationPath: NavigationPath
@@ -25,6 +28,8 @@ struct SavedLaunchesListView: View {
                         .multilineTextAlignment(.center)
                 }
                 .padding()
+                
+                // Empty state (no saved launches)
             } else if viewModel.launches.isEmpty {
                 VStack(spacing: 12) {
                     Image(systemName: "bookmark.slash")
@@ -37,6 +42,8 @@ struct SavedLaunchesListView: View {
                         .font(.caption)
                         .foregroundColor(.gray)
                 }
+                
+                // Main saved launches list
             } else {
                 List {
                     ForEach(viewModel.launches) { launch in
@@ -52,9 +59,11 @@ struct SavedLaunchesListView: View {
                 .listStyle(.plain)
             }
         }
+        // Navigation to launch details
         .navigationDestination(for: Launch.self) { launch in
             LaunchDetailView(launch: launch)
         }
+        // Load saved launches when view appears
         .task {
             await viewModel.loadSavedLaunches()
         }

@@ -8,7 +8,9 @@
 
 import SwiftUI
 import FirebaseAuth
-
+// ViewModel For handling Email/Password sign-up Logic
+// manges Sign-up state, input validation and firebase auth
+// @MainActor ensures all methods/properties are main-thread safe
 @MainActor
 final class SignUpEmailViewModel: ObservableObject {
     @Published var email = ""
@@ -16,14 +18,15 @@ final class SignUpEmailViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     
+    // Validates password and email by if empty and a min of 6 characters
     func signUp() {
         guard !email.isEmpty, !password.isEmpty else {
-            errorMessage = "Email og password må ikke være tomme"
+            errorMessage = "Email and Password cant be Empty"
             return
         }
         
         guard password.count >= 6 else {
-            errorMessage = "Password skal være mindst 6 tegn"
+            errorMessage = "Password needs to be at least 6 characters long"
             return
         }
         

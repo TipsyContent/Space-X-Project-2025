@@ -2,12 +2,12 @@ import Foundation
 import FirebaseFirestore
 import FirebaseAuth
 
-// MARK: - LaunchStorage with Firebase Firestore
-// Gemmer launch IDs i Firebase Firestore (cloud)
-// Valgt løsning: Firebase Firestore fordi:
-// - Data synkroniseres automatisk på tværs af enheder
-// - Cloud backup - data går ikke tabt
-// - Brugerbundet - hver bruger ser kun sine egne gemte launches
+// LaunchStorage with Firebase Firestore
+// Saves Launch IDS in Firebase firestore (Cloud)
+//Reason for chosing Firebase firestore:
+// - The Data of saved launches will be saved over multiple Devices instead of only the used device
+// - Firebase Firestore Cloud Backup So data is not lost
+// - User connected, users only see their own saved launches connected to their user
 final class LaunchStorage {
     static let shared = LaunchStorage()
     private init() {}
@@ -15,10 +15,10 @@ final class LaunchStorage {
     private let db = Firestore.firestore()
     private let collectionName = "saved_launches"
     
-    // MARK: - Save launch ID to Firestore
+    // Save launch ID to Firestore
     func saveLaunchID(_ id: String) {
         guard let userId = Auth.auth().currentUser?.uid else {
-            print("Bruger ikke logget ind")
+            print("User is not Logged In")
             return
         }
         
@@ -36,7 +36,7 @@ final class LaunchStorage {
         }
     }
     
-    // MARK: - Remove launch ID from Firestore
+    // Remove launch ID from Firestore
     func removeLaunchID(_ id: String) {
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
@@ -49,7 +49,7 @@ final class LaunchStorage {
         }
     }
     
-    // MARK: - Get saved launch IDs (Async)
+    // Get saved launch IDs (Async)
     func getSavedLaunchIDs() async -> [String] {
         guard let userId = Auth.auth().currentUser?.uid else {
             return []
@@ -67,7 +67,7 @@ final class LaunchStorage {
         }
     }
     
-    // MARK: - Check if launch is saved
+    // Check if launch is saved
     func isLaunchSaved(_ id: String) async -> Bool {
         let ids = await getSavedLaunchIDs()
         return ids.contains(id)

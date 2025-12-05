@@ -1,8 +1,10 @@
 import Foundation
 
-// MARK: - LaunchDetailViewModel
-// ViewModel for launch detail view
-// Loader rocket, crew, launchpad og landing pad data asyncronopnt
+// LaunchDetailViewModel
+// ViewModel for the launch detail view
+// Fetches related data (Rocket, Crew, Launchpad, Landing pad) async
+// manages save/unsave launch func with firebase firestore
+// @MainActor ensures all methods/properties are main-thread safe
 @MainActor
 final class LaunchDetailViewModel: ObservableObject {
     @Published var launch: Launch
@@ -20,7 +22,7 @@ final class LaunchDetailViewModel: ObservableObject {
         // Will check if saved when loadDetails is called
     }
     
-    // MARK: - Load all launch details
+    // Load all launch details
     func loadDetails() async {
         isLoading = true
         errorMessage = nil
@@ -82,7 +84,7 @@ final class LaunchDetailViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Toggle save launch
+    // Toggle save launch
     func toggleSave() {
         if isSaved {
             LaunchStorage.shared.removeLaunchID(launch.id)

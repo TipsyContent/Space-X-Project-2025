@@ -1,11 +1,14 @@
 import SwiftUI
 import MapKit
 
+
+// Displays detailed information about a specific launchpad
+// Shows launchpad header, key details, and all launches from this pad
 struct LaunchpadDetailView: View {
     let launchpad: Launchpad
-    @State private var launches: [Launch] = []
-    @State private var isLoading = false
-    @State private var errorMessage: String?
+    @State private var launches: [Launch] = [] // List of launches from this pad
+    @State private var isLoading = false // Loading state
+    @State private var errorMessage: String? // error message if fetching fails
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -33,23 +36,26 @@ struct LaunchpadDetailView: View {
         .navigationTitle(launchpad.name)
         .navigationBarTitleDisplayMode(.inline)
         .task {
+            // Load all launches for this pad when the view appears
             await loadLaunches()
         }
     }
     
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 8) {
+            // Launchpad Name
             Text(launchpad.name)
                 .font(.title2)
                 .bold()
                 .foregroundColor(.white)
             
+            // full name if available
             if let fullName = launchpad.full_name {
                 Text(fullName)
                     .font(.caption)
                     .foregroundColor(.white.opacity(0.7))
             }
-            
+            // status and success rate
             HStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Status")
@@ -86,12 +92,14 @@ struct LaunchpadDetailView: View {
         }
     }
     
+    // Info Sections
     private var infoSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Details")
                 .font(.headline)
                 .foregroundColor(.cyan)
             
+            // Optional details with safe unwrapping
             if let locality = launchpad.locality {
                 infoRow(label: "City", value: locality)
             }
@@ -100,9 +108,11 @@ struct LaunchpadDetailView: View {
                 infoRow(label: "Region", value: region)
             }
             
+            // Coordinates
             infoRow(label: "Latitude", value: String(format: "%.4f", launchpad.latitude))
             infoRow(label: "Longitude", value: String(format: "%.4f", launchpad.longitude))
             
+            // Launch attempts and successes
             if let attempts = launchpad.launch_attempts {
                 infoRow(label: "Launch Attempts", value: "\(attempts)")
             }
@@ -120,6 +130,7 @@ struct LaunchpadDetailView: View {
         .cornerRadius(8)
     }
     
+    // Launches Section
     @ViewBuilder
     private var launchesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -160,6 +171,7 @@ struct LaunchpadDetailView: View {
         .cornerRadius(8)
     }
     
+    // Reusable row for label-value pairs
     private func infoRow(label: String, value: String) -> some View {
         HStack {
             Text(label)
@@ -174,6 +186,7 @@ struct LaunchpadDetailView: View {
         .padding(.vertical, 4)
     }
     
+    // Maps launchpad status string to a color
     private var statusColor: Color {
         guard let status = launchpad.status else { return .gray }
         switch status.lowercased() {
@@ -184,6 +197,7 @@ struct LaunchpadDetailView: View {
         }
     }
     
+    // Fetches all launches and filters by this launchpad ID
     private func loadLaunches() async {
         isLoading = true
         errorMessage = nil

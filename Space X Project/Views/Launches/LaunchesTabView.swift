@@ -1,9 +1,9 @@
 import SwiftUI
 
 // MARK: - LaunchesTabView
-// Tab view med toggle mellem alle launches og gemte launches
-// Bruger LaunchListViewModel for alle launches
-// Bruger SavedLaunchesViewModel for gemte launches
+// Tab view allowing users to switch between all launches and saved launches.
+// Uses LaunchListViewModel for all launches.
+// Uses SavedLaunchesListView for saved launches.
 struct LaunchesTabView: View {
     @StateObject var launchListVM = LaunchListViewModel()
     @State private var showSavedOnly = false
@@ -12,7 +12,7 @@ struct LaunchesTabView: View {
     var body: some View {
         NavigationStack(path: $navigationPath) {
             VStack {
-                // MARK: - Picker for All/Saved toggle
+                // Toggle between All Launches and Saved Launches
                 Picker("View", selection: $showSavedOnly) {
                     Text("All Launches").tag(false)
                     Text("Saved Launches").tag(true)
@@ -20,7 +20,7 @@ struct LaunchesTabView: View {
                 .pickerStyle(.segmented)
                 .padding()
                 
-                // MARK: - Conditional views
+                // Display either saved launches or all launches
                 if showSavedOnly {
                     SavedLaunchesListView(navigationPath: $navigationPath)
                 } else {
@@ -29,6 +29,7 @@ struct LaunchesTabView: View {
                         navigationPath: $navigationPath
                     )
                     .task {
+                        // Load launches only once when the list is empty
                         if launchListVM.launches.isEmpty {
                             await launchListVM.fetchLaunches()
                         }

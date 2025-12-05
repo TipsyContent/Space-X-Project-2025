@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-
+// View handles user sign-up with email and password from UI
+// SignupEmailViewModel Validation, loading State and error handling
 struct SignUpEmailView: View {
     @StateObject private var viewModel = SignUpEmailViewModel()
     @Environment(\.dismiss) var dismiss
@@ -19,7 +20,7 @@ struct SignUpEmailView: View {
                 .background(Color.gray.opacity(0.4))
                 .cornerRadius(10)
             
-            SecureField("Password (min 6 tegn)...", text: $viewModel.password)
+            SecureField("Password (min 6 characters)...", text: $viewModel.password)
                 .padding()
                 .background(Color.gray.opacity(0.4))
                 .cornerRadius(10)
@@ -30,7 +31,7 @@ struct SignUpEmailView: View {
                     .foregroundColor(.red)
                     .padding()
             }
-            
+            // Triggers the sign-up. Should Show a loading spinner while processing
             Button(action: {
                 viewModel.signUp()
             }) {
@@ -47,7 +48,7 @@ struct SignUpEmailView: View {
             .frame(maxWidth: .infinity)
             .background(Color.blue)
             .cornerRadius(10)
-            .disabled(viewModel.isLoading)
+            .disabled(viewModel.isLoading) // Should prevent repeated tabs when loading
             
             Spacer()
         }

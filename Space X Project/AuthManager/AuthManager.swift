@@ -17,19 +17,19 @@ final class AuthManager {
         
     }
     
-    // Create User Firebase
+    // Create User in Firebase
     func createUser(email: String, password: String) async throws -> AuthDataResultModel {
         let authDataResult = try await Auth.auth().createUser(withEmail: email, password: password)
         return AuthDataResultModel(user: authDataResult.user)
     }
     
-    // Sign In
+    // Sign In function
     func signIn(email: String, password: String) async throws -> AuthDataResultModel {
         let authDataResult = try await Auth.auth().signIn(withEmail: email, password: password)
         return AuthDataResultModel(user: authDataResult.user)
     }
     
-    // Sign Out
+    // Sign Out Function
     func signOut() throws {
         try Auth.auth().signOut()
     }

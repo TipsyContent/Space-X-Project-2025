@@ -11,6 +11,7 @@ final class PayloadService {
     static let shared = PayloadService()
     private init() {}
     
+    // Fetch Payload by ID async
     func fetchPayload(id: String) async throws -> Payload  {
         let url = "https://api.spacexdata.com/v4/payloads/\(id)"
         return try await APIService.shared.fetchData(from: url, type: Payload.self)

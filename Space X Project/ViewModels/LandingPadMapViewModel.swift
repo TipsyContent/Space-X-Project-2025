@@ -7,7 +7,9 @@
 
 
 import Foundation
-
+// ViewModel for managing landing pad data with the idea to also showcase landing pads on map
+// fetches all landing pads and manges loading error state
+// @MainActor ensures all methods/properties are main-thread safe
 @MainActor
 final class LandingPadMapViewModel: ObservableObject {
     @Published var landingPads: [LandingPad] = []

@@ -1,5 +1,7 @@
 import Foundation
 
+
+//Preview Test Data To Test Application before the API was currectly setup and could be used.
 struct PreviewData {
     static let launches = [
         Launch(

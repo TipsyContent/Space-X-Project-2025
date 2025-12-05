@@ -11,15 +11,20 @@ import Firebase
 @main
 struct Space_X_ProjectApp: App {
     
+    // Connects the AppDelegate to handle Firebase setup and other app-level tasks
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    
+    // Auth state manager to track if the user is logged in
     @StateObject var authStateManager = AuthStateManager()
     
     var body: some Scene {
         WindowGroup {
+            // Conditional navigation based on authentication state
             if authStateManager.isLoggedIn {
                 ContentView()
                     .environmentObject(authStateManager)
             } else {
+                // Show authentication screen if not logged in
                 NavigationStack {
                     AuthView()
                         .environmentObject(authStateManager)
@@ -31,7 +36,9 @@ struct Space_X_ProjectApp: App {
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     
+    // Called when the app finishes launching
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        // Initialize Firebase
         FirebaseApp.configure()
         
         // Setup image caching

@@ -7,14 +7,22 @@
 import SwiftUI
 import FirebaseAuth
 
-
+// Email/password sign-in view for existing users
+// Collects email and password input from user
+// Validates input and authenticates with Firebase
+// Automatically navigates to main app when login succeeds
 struct SignInEmailView: View {
+    
+    // Handles validation, loading state, and Firebase authentication
     @StateObject private var viewModel = SignInEmailViewModel()
+    
+    // When Firebase detects successful login, AuthStateManager updates
+    // This automatically triggers navigation from AuthView to ContentView
     @EnvironmentObject var authStateManager: AuthStateManager
     
     var body: some View {
         VStack(spacing: 16) {
-            Text("Log ind på din konto")
+            Text("Log in to your Account")
                 .font(.title2)
                 .bold()
                 .foregroundColor(.white)

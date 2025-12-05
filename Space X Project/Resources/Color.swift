@@ -7,7 +7,12 @@
 
 import SwiftUI
 
+// A extention made to allow Hex Codes to be used in SwiftUI as i find HEX codes easier to color with
+// Allows the use of Color(Hex: "ffffff") in the app
 extension Color {
+    
+    /// Parameter hex: A hex color string (With or without # prefix)
+    /// Example format: "ffffff" or "#ffffff"
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
         let scanner = Scanner(string: hex)

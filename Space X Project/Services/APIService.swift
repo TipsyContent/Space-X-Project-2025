@@ -1,5 +1,6 @@
 import Foundation
 
+// APIService Class To Try Feach from URL Used by Diffrent FetchService Classes Async
 final class APIService {
     static let shared = APIService()
     private init() {}
@@ -9,7 +10,7 @@ final class APIService {
             throw APIError.invalidURL
         }
         
-        print("🔄 Fetching from: \(urlString)")
+        print("Try Fetching from: \(urlString)")
         
         let (data, response) = try await URLSession.shared.data(from: url)
         
@@ -18,7 +19,7 @@ final class APIService {
             throw APIError.noData
         }
         
-        print("📊 HTTP Status: \(httpResponse.statusCode)")
+        print("The HTTP Status: \(httpResponse.statusCode)")
         
         guard (200...299).contains(httpResponse.statusCode) else {
             throw APIError.invalidURL
@@ -28,37 +29,39 @@ final class APIService {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
             let decodedData = try decoder.decode(T.self, from: data)
-            print("✅ Successfully decoded data")
+            print("Successfully decoded data")
             return decodedData
+            // Catches for errors when fetching (DataCorrupted, KeyNotFound, TypeMismatch,ValueNotFound)
         } catch let DecodingError.dataCorrupted(context) {
-            print("❌ Data corrupted: \(context.debugDescription)")
-            print("❌ Coding path: \(context.codingPath.map { $0.stringValue }.joined(separator: " -> "))")
+            print("Data was corrupted: \(context.debugDescription)")
+            print("Coding path: \(context.codingPath.map { $0.stringValue }.joined(separator: " -> "))")
             throw APIError.decodingError
         } catch let DecodingError.keyNotFound(key, context) {
-            print("❌ Key not found: \(key.stringValue)")
-            print("❌ Context: \(context.debugDescription)")
-            print("❌ Coding path: \(context.codingPath.map { $0.stringValue }.joined(separator: " -> "))")
+            print("The Key not found: \(key.stringValue)")
+            print("Context: \(context.debugDescription)")
+            print("Coding path: \(context.codingPath.map { $0.stringValue }.joined(separator: " -> "))")
             throw APIError.decodingError
         } catch let DecodingError.typeMismatch(type, context) {
-            print("❌ Type mismatch for type: \(type)")
-            print("❌ Context: \(context.debugDescription)")
-            print("❌ Coding path: \(context.codingPath.map { $0.stringValue }.joined(separator: " -> "))")
+            print("The Type mismatch for type: \(type)")
+            print("Context: \(context.debugDescription)")
+            print("Coding path: \(context.codingPath.map { $0.stringValue }.joined(separator: " -> "))")
             throw APIError.decodingError
         } catch let DecodingError.valueNotFound(type, context) {
-            print("❌ Value not found for type: \(type)")
-            print("❌ Context: \(context.debugDescription)")
-            print("❌ Coding path: \(context.codingPath.map { $0.stringValue }.joined(separator: " -> "))")
+            print("Value not found for type: \(type)")
+            print("Context: \(context.debugDescription)")
+            print("Coding path: \(context.codingPath.map { $0.stringValue }.joined(separator: " -> "))")
             throw APIError.decodingError
         } catch {
-            print("❌ Decoding error: \(error.localizedDescription)")
+            print("Decoding error: \(error.localizedDescription)")
             if let data = String(data: data, encoding: .utf8) {
-                print("📝 Raw response (first 1000 chars): \(data.prefix(1000))")
+                print("Raw response (first 1000 chars) To not Fill out The Terminal: \(data.prefix(1000))")
             }
             throw APIError.decodingError
         }
     }
 }
 
+// API error Enum
 enum APIError: Error, LocalizedError {
     case invalidURL
     case noData

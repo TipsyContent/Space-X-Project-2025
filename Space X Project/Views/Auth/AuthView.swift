@@ -1,5 +1,9 @@
 import SwiftUI
 
+// Authentication entry point for new or returning users
+// Displays sign-in and sign-up options
+// Once user authenticates, AuthStateManager detects login and shows main app
+// This view is only shown when user is NOT logged in
 struct AuthView: View {
     var body: some View {
         VStack(spacing: 20) {
@@ -12,6 +16,7 @@ struct AuthView: View {
                 .font(.caption)
                 .foregroundColor(.white.opacity(0.7))
             
+            // SignInEmailView For Existing users
             NavigationLink {
                 SignInEmailView()
             } label: {
@@ -24,6 +29,7 @@ struct AuthView: View {
                     .cornerRadius(10)
             }
             
+            // SignUpEmailView for new users
             NavigationLink {
                 SignUpEmailView()
             } label: {
@@ -36,6 +42,7 @@ struct AuthView: View {
                     .cornerRadius(10)
             }
             
+            // TestLogin for quick login with premade code
             Button(action: testLogin) {
                 Text("Test (Skip Login)")
                     .font(.caption)

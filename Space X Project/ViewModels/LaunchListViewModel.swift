@@ -7,7 +7,9 @@
 
 
 import Foundation
-
+// Viewmodel for managing launch list view state and dats
+// fetches all launches from api and manages loading error state
+// @MainActor ensures all methods/properties are main-thread safe
 @MainActor
 final class LaunchListViewModel: ObservableObject {
     @Published var launches: [Launch] = []

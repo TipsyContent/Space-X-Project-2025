@@ -1,5 +1,9 @@
 import Foundation
 
+// The Main Model Class for Launch with most posible infomation that can be found in the JSON from API /Launches
+// Codable used because its used by the JSON decoder from API
+// Identifiable used because it makes them Unique via their ID's
+// Hashable used because it makes them usable inside sets and Dictionary keys
 struct Launch: Codable, Identifiable, Hashable {
     let id: String
     let name: String
@@ -100,17 +104,21 @@ struct Launch: Codable, Identifiable, Hashable {
         return date_utc
     }
     
+    // Combines Only Launch id to hash for safe Identification
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
     
+    // Compares Launches based on their ID
     static func == (lhs: Launch, rhs: Launch) -> Bool {
         lhs.id == rhs.id
     }
 }
 
 
-
+// Model For Rockets
+// Codable for Json Decoding from API
+// Identifiable for Unique identifiaction by ID
 struct Rocket: Codable, Identifiable {
     let id: String
     let name: String
@@ -197,6 +205,7 @@ struct Rocket: Codable, Identifiable {
     }
 }
 
+// Model for Capsules
 struct Capsule: Codable, Identifiable {
     let id: String
     let serial: String?
@@ -209,6 +218,7 @@ struct Capsule: Codable, Identifiable {
     let launches: [String]?
 }
 
+//Model for Crew
 struct Crew: Codable, Identifiable {
     let id: String
     let name: String
@@ -219,6 +229,7 @@ struct Crew: Codable, Identifiable {
     let launches: [String]?
 }
 
+//Model for Payloads
 struct Payload: Codable, Identifiable {
     let id: String
     let name: String?
@@ -227,6 +238,7 @@ struct Payload: Codable, Identifiable {
     let mass_lbs: Double?
 }
 
+//model for LaunchPads
 struct Launchpad: Codable, Identifiable, Hashable {
     let id: String
     let name: String
@@ -243,6 +255,7 @@ struct Launchpad: Codable, Identifiable, Hashable {
     let launches: [String]?
 }
 
+//Model for landingPads
 struct LandingPad: Codable, Identifiable {
     let id: String
     let name: String

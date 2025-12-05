@@ -1,5 +1,7 @@
 import SwiftUI
 
+//Display all detailed info about the selected launch
+// includes (Rockets, Crew(if there is any), Launchpad, Media)
 struct LaunchDetailView: View {
     @StateObject var viewModel: LaunchDetailViewModel
     @Environment(\.dismiss) var dismiss
@@ -10,20 +12,22 @@ struct LaunchDetailView: View {
     
     var body: some View {
         ZStack {
+            // Background color
             Color(hex: "023E61").edgesIgnoringSafeArea(.all)
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     
-                    headerView
+                    headerView // Launch image, name, date and status
                     divider
-                    saveButton
-                    detailsSection
-                    flightInfoSection
-                    rocketSection
-                    crewSection
-                    launchpadSection
-                    mediaSection
+                    saveButton // bookmark save button
+                    detailsSection // launch details
+                    flightInfoSection // flight number
+                    rocketSection // rocket infomation
+                    crewSection // crew members if there was a crew
+                    launchpadSection // Launchpad details
+                    mediaSection // Youtube / web infomation
+                    landingPadSection //Landing pad detils
                     
                 }
                 .frame(maxWidth: .infinity)
@@ -38,8 +42,9 @@ struct LaunchDetailView: View {
         }
     }
     
-    // MARK: - Subviews
+    // Subviews
     
+    // Header image and basic information
     private var headerView: some View {
         HStack(alignment: .top, spacing: 16) {
             AsyncImage(url: URL(string: viewModel.launch.links?.patch?.large ?? "")) { image in
@@ -73,10 +78,12 @@ struct LaunchDetailView: View {
         }
     }
     
+    // Divider styling
     private var divider: some View {
         Divider().background(Color.white.opacity(0.3))
     }
     
+    // Save / Unsave launch button
     private var saveButton: some View {
         Button(action: {
             if viewModel.isSaved {
@@ -153,7 +160,7 @@ struct LaunchDetailView: View {
         }
     }
     
-    // MARK: - Helpers
+    // Helpers
     
     private var statusIcon: String {
         if viewModel.launch.success == true {
@@ -182,6 +189,7 @@ struct LaunchDetailView: View {
         return "Unknown"
     }
     
+    // Build rocket info list
     private func buildRocketContent(_ rocket: Rocket) -> [String] {
         var content: [String] = ["Name: \(rocket.name)"]
         if let height = rocket.height?.meters {
@@ -199,6 +207,7 @@ struct LaunchDetailView: View {
         return content
     }
     
+    // Build launchpad info list
     private func buildLaunchpadContent(_ launchpad: Launchpad) -> [String] {
         var content: [String] = [launchpad.name]
         if let locality = launchpad.locality {
@@ -210,6 +219,7 @@ struct LaunchDetailView: View {
         return content
     }
     
+    // Build landing pad info list
     private func buildLandingPadContent(_ pad: LandingPad) -> [String] {
         var content: [String] = [pad.name]
         if let fullName = pad.full_name {
@@ -232,6 +242,7 @@ struct LaunchDetailView: View {
     
 }
 
+// A reusable view for rendering a titled information block.
 struct LaunchDetailSectionView: View {
     let title: String
     let content: [String]

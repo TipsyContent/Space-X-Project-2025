@@ -1,9 +1,16 @@
 import SwiftUI
 import FirebaseAuth
 
+// Settings and user account view
+// Displays current logged-in user information
+// Provides sign-out func
+// Accessed via Settings tab in main app TabView
 struct SettingsView: View {
+    // This triggers app to show AuthView instead of ContentView
     @EnvironmentObject var authStateManager: AuthStateManager
+    // Error message display if sign out fails
     @State private var errorMessage: String?
+    // contains the uid, email, photoURL
     @State private var currentUser: AuthDataResultModel?
     
     var body: some View {

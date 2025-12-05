@@ -1,14 +1,18 @@
 import Foundation
 
-// MARK: - SavedLaunchesViewModel
-// Loader gemte launches fra Firebase Firestore
+// SavedLaunchesViewModel
+// ViewModel for managing saved launches view state and data
+// Fetches user's saved launches from Firebase Firestore
+// Only loads launches that user has bookmarked
+// Manages loading state and error handling
+// @MainActor ensures all methods/properties are main-thread safe
 @MainActor
 final class SavedLaunchesViewModel: ObservableObject {
     @Published var launches: [Launch] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    // MARK: - Load saved launches
+    // Load saved launches
     func loadSavedLaunches() async {
         isLoading = true
         errorMessage = nil

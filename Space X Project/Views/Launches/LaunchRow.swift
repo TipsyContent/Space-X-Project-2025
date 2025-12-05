@@ -6,11 +6,14 @@
 //
 import SwiftUI
 
+// A single row representing a SpaceX launch in a list.
+// Displays patch image, launch name, date, and flight success indicator.
 struct LaunchRow: View {
     let launch: Launch
     
     var body: some View {
         HStack(spacing: 12) {
+            // Launch patch image (fallback shown if unavailable)
             AsyncImage(url: URL(string: launch.links?.patch?.small ?? "")) { image in
                 image.resizable()
                     .scaledToFill()
@@ -22,6 +25,7 @@ struct LaunchRow: View {
             .cornerRadius(8)
             .clipped()
             
+            // Launch Text info
             VStack(alignment: .leading, spacing: 4) {
                 Text(launch.name)
                     .font(.headline)
@@ -44,6 +48,7 @@ struct LaunchRow: View {
         .background(Color(hex: "045788"))
     }
     
+    // Creates a readable success status string
     private var successBadge: String {
         if let success = launch.success {
             return success ? "✓ Success" : "✗ Failed"
@@ -51,6 +56,7 @@ struct LaunchRow: View {
         return "Status Unknown"
     }
     
+    // Sets the success text color
     private var successColor: Color {
         if let success = launch.success {
             return success ? .green : .red

@@ -2,9 +2,9 @@ import Foundation
 import FirebaseAuth
 import Combine
 
-// MARK: - AuthStateManager
-// Manager for Firebase authentication state
-// Bruger Firebase Auth listener til at automatisk opdatere login status
+// AuthStateManager
+// Manager for Firebase Auth state
+// Uses Firebase auth listener to auto update Login Status
 @MainActor
 final class AuthStateManager: ObservableObject {
     @Published var isLoggedIn: Bool = false
@@ -15,13 +15,13 @@ final class AuthStateManager: ObservableObject {
         setupAuthStateListener()
     }
     
-    // MARK: - Check current auth state
+    // Check current auth state
     private func checkAuthState() {
         self.isLoggedIn = Auth.auth().currentUser != nil
         print("Auth state checked: isLoggedIn = \(self.isLoggedIn)")
     }
     
-    // MARK: - Setup Firebase auth listener
+    // Setup Firebase auth listener
     private func setupAuthStateListener() {
         authStateListener = Auth.auth().addStateDidChangeListener { _, user in
             DispatchQueue.main.async {
@@ -31,7 +31,7 @@ final class AuthStateManager: ObservableObject {
         }
     }
     
-    // MARK: - Sign out
+    // Sign out
     func logout() throws {
         try Auth.auth().signOut()
         self.isLoggedIn = false

@@ -1,6 +1,8 @@
 import SwiftUI
 import MapKit
 
+// Didnt finish in time was supposed to have a map when you click landing pad to find the lading pad of the launch you where looking at.
+// The View display a map showing landing pads and locations
 struct LandingPadMapView: View {
     @StateObject var viewModel: LandingPadMapViewModel = LandingPadMapViewModel()
     
