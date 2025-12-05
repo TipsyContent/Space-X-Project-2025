@@ -20,3 +20,4 @@ final class LaunchService {
         return try await APIService.shared.fetchData(from: url, type: Launch.self)
     }
 }
+

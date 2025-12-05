@@ -12,7 +12,7 @@ struct AuthView: View {
                 .bold()
                 .foregroundColor(.white)
             
-            Text("Log ind eller opret konto")
+            Text("Log in or Create Accnount)
                 .font(.caption)
                 .foregroundColor(.white.opacity(0.7))
             
